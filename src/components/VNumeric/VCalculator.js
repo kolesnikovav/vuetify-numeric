@@ -1,4 +1,4 @@
-import { VTextField, VBtn, VCard, VRow, VSheet } from 'vuetify/lib'
+import { VTextField, VBtn, VRow, VSheet } from 'vuetify/lib'
 import mixins from 'vuetify/lib/util/mixins'
 import Colorable from 'vuetify/lib/mixins/colorable'
 import Themeable from 'vuetify/lib/mixins/themeable'
@@ -32,19 +32,83 @@ export default mixins(
     text: {
       type: Boolean,
       default: false
+    },
+    useGrouping: {
+      type: Boolean,
+      default: true
     }
 
   },
   computed: {
-
+    numberFormatter () {
+      return new Intl.NumberFormat('en-US', {
+        useGrouping: this.useGrouping
+      })
+    },
+    resultNumber () {
+      return this.numberFormatter.format(this.value)
+    }
   },
   data: () => ({
-    value: '0'
+    value: '0',
+    operand: 0,
+    operation: undefined
   }),
   methods: {
+    getOperation (simbol) {
+      if (simbol === '+') return (a, b) => { return Number(a) + Number(b) }
+      else if (simbol === '-') return (a, b) => { return Number(a) - Number(b) }
+      else if (simbol === '*') return (a, b) => { return Number(a) * Number(b) }
+      else if (simbol === '÷') return (a, b) => { return Number(a) / Number(b) }
+      else if (simbol === '%') return (a, b) => { return (Number(a) / 100) * Number(b) }
+    },
     changeValue (newVal) {
-      if (this.value === '0') this.value = newVal
-      else this.value += newVal
+      let v
+      if (newVal.key) {
+        v = newVal.key
+      } else {
+        v = newVal
+      }
+      if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '00'].includes(v)) {
+        if (this.value === '0') this.value = v
+        else this.value += v
+      } else if (v === 'Backspace' || v === '←') {
+        if (this.value.length === 2 && this.value.startsWith('-')) {
+          this.value = '0'
+        } else {
+          this.value = this.value.length <= 1 ? '0' : this.value.substring(0, this.value.length - 1)
+        }
+      } else if (v.toUpperCase() === 'C') {
+        this.value = '0'
+        this.operation = undefined
+        this.operand = 0
+      } else if (v === ',' || v === '.') {
+        if (this.value.indexOf('.') === -1) {
+          this.value += '.'
+        }
+      } else if (v === '±') {
+        if (this.value.toString().startsWith('-')) this.value = this.value.toString().substring(1, this.value.length)
+        else this.value = '-' + this.value
+      } else if (v === '1/x') {
+        if (this.value !== '0') this.value = 1 / Number.parseFloat(this.value)
+      } else if (['+', '-', '*', '÷', '%'].includes(v)) {
+        this.calculate()
+        this.operation = this.getOperation(v)
+        this.operand = this.value
+        this.value = '0'
+      } else if (['=', 'Enter', 'OK'].includes(v)) {
+        this.calculate()
+        this.operation = undefined
+        this.operand = 0
+      } else if (v === 'CE') {
+        this.value = '0'
+      }
+    },
+    calculate () {
+      if (this.value && this.operand && this.operation) {
+        const res = this.operation(this.operand, this.value)
+        this.value = res.toString()
+      }
     },
     genNumberButton (numberValue) {
       return this.$createElement(VBtn, {
@@ -106,13 +170,19 @@ export default mixins(
           outlined: true,
           reverse: true,
           readonly: true,
-          value: this.value
+          value: this.resultNumber
         },
         style: {
           padding: '12px'
         }
       })
     }
+  },
+  created () {
+    document.addEventListener('keydown', this.changeValue)
+  },
+  beforeDestroy () {
+    document.removeEventListener('keydown', this.changeValue)
   },
   render () {
     const layer1 = this.genRow(['7', '8', '9', '+', '±', 'C'])
