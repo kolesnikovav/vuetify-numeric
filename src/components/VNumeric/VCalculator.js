@@ -59,7 +59,7 @@ export default mixins(
       if (simbol === '+') return (a, b) => { return Number(a) + Number(b) }
       else if (simbol === '-') return (a, b) => { return Number(a) - Number(b) }
       else if (simbol === '*') return (a, b) => { return Number(a) * Number(b) }
-      else if (simbol === '÷') return (a, b) => { return Number(a) / Number(b) }
+      else if (simbol === '÷' || simbol === '/') return (a, b) => { return Number(a) / Number(b) }
       else if (simbol === '%') return (a, b) => { return (Number(a) / 100) * Number(b) }
     },
     changeValue (newVal) {
@@ -91,7 +91,7 @@ export default mixins(
         else this.value = '-' + this.value
       } else if (v === '1/x') {
         if (this.value !== '0') this.value = 1 / Number.parseFloat(this.value)
-      } else if (['+', '-', '*', '÷', '%'].includes(v)) {
+      } else if (['+', '-', '*', '÷', '/', '%'].includes(v)) {
         this.calculate()
         this.operation = this.getOperation(v)
         this.operand = this.value
@@ -121,7 +121,8 @@ export default mixins(
         props: {
           fab: this.fab,
           outlined: this.outlined,
-          rounded: this.rounded
+          rounded: this.rounded,
+          text: this.text
         },
         domProps: {
           innerHTML: numberValue
@@ -138,6 +139,12 @@ export default mixins(
           'padding-right': '0px',
           'max-width': '48px',
           'min-width': '48px'
+        },
+        props: {
+          fab: this.fab,
+          outlined: this.outlined,
+          rounded: this.rounded,
+          text: this.text
         },
         domProps: {
           innerHTML: actValue
