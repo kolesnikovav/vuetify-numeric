@@ -1,4 +1,4 @@
-import VNumeric from './VNumeric'
+import VNumericInput from './VNumericInput'
 
-export { VNumeric }
-export default VNumeric
+export { VNumericInput }
+export default VNumericInput

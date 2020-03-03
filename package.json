@@ -1,12 +1,30 @@
 {
   "name": "vuetify-numeric",
   "version": "0.1.0",
+  "description": "Numeric input components for use with vuetifyjs",
+  "author": {
+    "name": "Aleksandr Kolesnikov",
+    "email": "alex.v.kolesnikov72@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/kolesnikovav/vuetify-numeric",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kolesnikovav/vuetify-numeric.git"
+  },
+  "keywords": [
+    "vuetify",
+    "vue",
+    "calculator",
+    "numeric input"
+  ],
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lib": "vue-cli-service build --target lib 'src/components/index.js'"
   },
   "dependencies": {
     "core-js": "^3.6.4",

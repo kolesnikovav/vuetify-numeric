@@ -1,8 +1,8 @@
 import Vue from 'vue'
-import { VTextField, VMenu, VBtn, VIcon } from 'vuetify/lib'
+import { VTextField } from 'vuetify/lib'
 
 export default Vue.extend({
-  name: 'v-numeric',
+  name: 'v-numeric-input',
   props: {
     min: {
       type: Number,
@@ -24,9 +24,9 @@ export default Vue.extend({
       type: String,
       default: 'red'
     },
-    hideSpinButtons: {
-      type: Boolean,
-      default: true
+    textColor: {
+      type: Function,
+      default: undefined
     },
     locale: {
       type: String,
@@ -39,7 +39,9 @@ export default Vue.extend({
     ...VTextField.options.props
   },
   data: () => ({
-    internalValue: 0
+    internalValue: 0,
+    fractDigitsEdited: false,
+    fractPart: '0'
   }),
   computed: {
     numberFormatter () {
@@ -65,48 +67,23 @@ export default Vue.extend({
       this.internalValue = val
     },
     computedColor (newVal) {
-      const inputs = this.$el.getElementsByTagName('input')
-      if (inputs && inputs.length > 0) {
-        const inputEl = inputs[0]
-        inputEl.style.color = newVal || null
+      const input = this.genTextInput()
+      if (input) {
+        input.style.color = newVal || null
       }
     }
   },
   methods: {
-    genIcon () {
-      return this.$createElement(VIcon, {
-      }, ['mdi-calculator'])
-    },
-    genActivator (listeners) {
-      return this.$createElement(VBtn, {
-        props: {
-          icon: true
-        },
-        slot: 'activator',
-        on: {
-          click: (e) => {
-            e.stopPropagation()
-            this.isMenuActive = !this.isMenuActive
-          },
-          listeners
-        }
-      }, [
-        this.genIcon()
-      ])
-    },
-    genMenu () {
-      const genActivator = this.genActivator
-      return this.$createElement(VMenu, {
-        slot: 'append',
-        scopedSlots: {
-          'activator' (on) {
-            return genActivator(on)
-          }
-        }
-      })
+    genTextInput () {
+      const inputs = this.$el.getElementsByTagName('input')
+      if (inputs && inputs.length > 0) {
+        return inputs[0]
+      }
     },
     clearValue () {
       this.internalValue = 1
+      this.fractPart = '0'
+      this.fractDigitsEdited = false
       this.$nextTick(() => {
         if (this.value) {
           this.internalValue = this.value
@@ -115,42 +92,59 @@ export default Vue.extend({
         }
       })
     },
+    activateCalculator () {
+      this.$emit('activate-calculator', this.internalValue)
+    },
     keyProcess (keyEvent) {
       if (keyEvent.key !== 'ArrowLeft' && keyEvent.key !== 'ArrowRight') {
         keyEvent.preventDefault()
       }
       keyEvent.stopPropagation()
       const numericButtons = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-      let strVal = this.internalValue.toString()
+      let strVal = Math.trunc(this.internalValue).toString()
       if (numericButtons.includes(keyEvent.key)) {
-        if (strVal === '0' && keyEvent.key !== '0') {
-          strVal = keyEvent.key
-        } else if (strVal !== '0') {
-          strVal += keyEvent.key
+        if (this.fractDigitsEdited) {
+          if (this.fractPart === '0' && keyEvent.key !== '0') {
+            this.fractPart = keyEvent.key
+          } else if (this.fractPart !== '0') {
+            this.fractPart += keyEvent.key.toString()
+          }
+        } else {
+          if (strVal === '0' && keyEvent.key !== '0') {
+            strVal = keyEvent.key
+          } else if (strVal !== '0') {
+            strVal += keyEvent.key
+          }
         }
       } else if (keyEvent.key === '-') {
         if (strVal.startsWith('-')) strVal = strVal.replace('-', '')
         else strVal = '-' + strVal
       } else if (keyEvent.key === 'Backspace') {
-        if (strVal.length === 2 && strVal.startsWith('-')) {
-          strVal = '0'
+        if (this.fractDigitsEdited) {
+          this.fractPart = this.fractPart.length <= 1 ? '0' : this.fractPart.substring(0, this.fractPart.length - 1)
         } else {
-          strVal = strVal.length <= 1 ? '0' : strVal.substring(0, strVal.length - 1)
+          if (strVal.length === 2 && strVal.startsWith('-')) {
+            strVal = '0'
+          } else {
+            strVal = strVal.length <= 1 ? '0' : strVal.substring(0, strVal.length - 1)
+          }
         }
       } else if ([',', '.'].includes(keyEvent.key)) {
-        if (!strVal.contains('.')) {
-          strVal = strVal + '.0'
+        if (this.precision > 0) {
+          this.fractDigitsEdited = !this.fractDigitsEdited
         }
+      }
+      if (this.precision > 0) {
+        strVal = strVal + '.' + this.fractPart
       }
       this.internalValue = Number(strVal)
     }
   },
   mounted () {
-    const inputs = this.$el.getElementsByTagName('input')
-    if (inputs && inputs.length > 0) {
-      const inputEl = inputs[0]
-      inputEl.setAttribute('type', 'text')
-      inputEl.style.textAlign = 'right'
+    const input = this.genTextInput()
+    if (input) {
+      input.setAttribute('type', 'text')
+      input.style.textAlign = 'right'
     }
   },
   render () {
@@ -159,13 +153,14 @@ export default Vue.extend({
     if (currentProps.prefix) {
       currentProps.prefix = undefined
     }
-    const v = this.$createElement(VTextField, {
+    currentProps.appendIcon = 'mdi-calculator'
+    return this.$createElement(VTextField, {
       props: currentProps,
       on: {
         keydown: this.keyProcess,
-        'click:clear': this.clearValue
+        'click:clear': this.clearValue,
+        'click:append': this.activateCalculator
       }
-    }, [this.genMenu()])
-    return v
+    })
   }
 })

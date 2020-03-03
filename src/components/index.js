@@ -1,12 +1,12 @@
-import VNumeric from './VNumeric'
+import VNumericInput from './VNumeric'
 import VCalculator from './VNumeric/VCalculator'
 
 export default {
-  VNumeric,
+  VNumericInput,
   VCalculator
 }
 
 export {
-  VNumeric,
+  VNumericInput,
   VCalculator
 }
