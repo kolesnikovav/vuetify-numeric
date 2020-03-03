@@ -15,7 +15,7 @@ module.exports = {
     ...(process.env.NODE_ENV === 'production'
       ? {
         externals: {
-          'vuetify/lib': 'vuetify/lib'
+          // 'vuetify/lib': 'vuetify/lib'
           // 'vuetify/lib/components/VTreeview/VTreeviewNode': 'vuetify/lib/components/VTreeview/VTreeviewNode',
           // /* utils & helpers */
           // 'vuetify/lib/util/console': 'vuetify/lib/util/console',

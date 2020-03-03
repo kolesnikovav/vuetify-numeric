@@ -66,6 +66,9 @@ export default Vue.extend({
     value (val) {
       this.internalValue = val
     },
+    internalValue (val) {
+      this.$emit('change-value', val)
+    },
     computedColor (newVal) {
       const input = this.genTextInput()
       if (input) {

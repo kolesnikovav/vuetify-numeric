@@ -36,8 +36,11 @@ export default mixins(
     useGrouping: {
       type: Boolean,
       default: true
+    },
+    initialValue: {
+      type: Number,
+      default: 0
     }
-
   },
   computed: {
     numberFormatter () {
@@ -54,6 +57,11 @@ export default mixins(
     operand: 0,
     operation: undefined
   }),
+  watch: {
+    initialValue (newValue) {
+      this.value = newValue
+    }
+  },
   methods: {
     getOperation (simbol) {
       if (simbol === '+') return (a, b) => { return Number(a) + Number(b) }
@@ -100,9 +108,13 @@ export default mixins(
         this.calculate()
         this.operation = undefined
         this.operand = 0
+        if (v === 'Enter' || v === 'OK') this.returnValue()
       } else if (v === 'CE') {
         this.value = '0'
       }
+    },
+    returnValue () {
+      this.$emit('return-value', this.value)
     },
     calculate () {
       if (this.value && this.operand && this.operation) {
@@ -187,6 +199,7 @@ export default mixins(
   },
   created () {
     document.addEventListener('keydown', this.changeValue)
+    this.value = this.initialValue.toString()
   },
   beforeDestroy () {
     document.removeEventListener('keydown', this.changeValue)

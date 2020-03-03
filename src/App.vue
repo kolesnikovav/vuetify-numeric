@@ -2,6 +2,7 @@
   <v-app class="demo-content">
     <h1>Vuetify-numeric demo page</h1>
     <v-content>
+      <v-numeric></v-numeric>
       <v-numeric-input
       :prefix = "prefix"
       :useGrouping = "useGrouping"
@@ -36,13 +37,15 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import VNumericInput from './components/VNumeric'
+import VNumeric from './components/VNumeric/VNumeric'
+import VNumericInput from './components/VNumeric/VNumericInput'
 import VCalculator from './components/VNumeric/VCalculator'
 
 export default Vue.extend({
   name: 'App',
 
   components: {
+    VNumeric,
     VNumericInput,
     VCalculator
   },
