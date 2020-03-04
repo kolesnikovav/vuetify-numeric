@@ -19,7 +19,7 @@ export default Vue.extend({
       default: 10
     },
     precision: {
-      type: Number,
+      type: [Number, String],
       default: 0
     },
     negativeTextColor: {
@@ -38,17 +38,47 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
+    /* customizing calculator */
+    elevation: {
+      type: Number,
+      default: 0
+    },
+    fab: {
+      type: Boolean,
+      default: false
+    },
+    rounded: {
+      type: Boolean,
+      default: false
+    },
+    text: {
+      type: Boolean,
+      default: false
+    },
     ...VTextField.options.props
   },
   computed: {
-
+    computedPrecision () {
+      return Number(this.precision)
+    }
   },
   data: () => ({
     internalValue: 0,
-    isMenuActive: false
+    isMenuActive: false,
+    xMenuPos: 0,
+    yMenuPos: 0
   }),
+  watch: {
+    value: {
+      deep: true,
+      immediate: true,
+      handler (newVal) {
+        this.internalValue = Number(newVal)
+      }
+    }
+  },
   methods: {
-    activateCalculator (val) {
+    activateCalculator () {
       this.isMenuActive = true
     },
     closeCalculator (val) {
@@ -58,27 +88,46 @@ export default Vue.extend({
     changeValue (val) {
       if (val) {
         this.internalValue = Number(val)
+        this.$emit('input', this.internalValue)
       }
     },
     genCalculator () {
       return this.$createElement(VCalculator, {
         props: {
-          initialValue: this.internalValue
+          initialValue: this.internalValue,
+          locale: this.locale,
+          useGrouping: this.useGrouping,
+          negativeTextColor: this.negativeTextColor,
+          precision: this.computedPrecision,
+          elevation: this.elevation,
+          fab: this.fab,
+          outlined: this.outlined,
+          rounded: this.rounded,
+          text: this.text,
+          dark: this.dark,
+          dense: this.dense,
+          isActive: this.isMenuActive
         },
         on: {
           'return-value': (val) => this.closeCalculator(val)
         }
       })
     },
+    setMenuPosition (rect) {
+      this.yMenuPos = rect.bottom
+      this.xMenuPos = rect.right - 288
+    },
     genInput () {
-      const props = Object.assign({}, this.props)
+      const props = Object.assign({}, this.$props)
       props.value = this.internalValue
+      props.precision = this.computedPrecision
       return this.$createElement(VNumericInput, {
         props,
         slot: 'activator',
         on: {
-          'activate-calculator': (val) => this.activateCalculator(val),
-          'change-value': (val) => this.changeValue(val)
+          'activate-calculator': () => this.activateCalculator(),
+          'change-value': (val) => this.changeValue(val),
+          'resize-numeric-input': (rect) => this.setMenuPosition(rect)
         }
       })
     }
@@ -88,10 +137,15 @@ export default Vue.extend({
     const self = this
     return this.$createElement(VMenu, {
       props: {
+        absolute: true,
+        positionX: this.xMenuPos,
+        positionY: this.yMenuPos,
         closeOnContentClick: false,
         value: this.isMenuActive,
         dark: this.dark,
-        dense: this.dense
+        dense: this.dense,
+        maxWidth: '288px',
+        right: true
       },
       scopedSlots: {
         'activator' (on) {

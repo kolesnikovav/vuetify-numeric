@@ -1,36 +1,93 @@
 <template>
-  <v-app class="demo-content">
-    <h1>Vuetify-numeric demo page</h1>
+  <v-app>
+    <v-app-bar :clipped-left="$vuetify.breakpoint.lgAndUp" app>
+      <v-toolbar-title class="headline text-uppercase">
+        <span class="font-weight-light">VUETIFY-NUMERIC demo page</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn icon large href = "https://github.com/kolesnikovav/vuetify-numeric">
+        GitHub
+      </v-btn>
+    </v-app-bar>
     <v-content>
-      <v-numeric></v-numeric>
-      <v-numeric-input
-      :prefix = "prefix"
-      :useGrouping = "useGrouping"
-      :precision = "numPrecision"
-      clearable
-      :autocomplete = "true"
-      ></v-numeric-input>
-      <p>VCalculator example</p>
-      <v-row>
-        <v-col>
-      <v-calculator
-      :elevation="10"
-      :dark = "dark"
-      :fab = "fab"
-      :outlined = "outlined"
-      :rounded = "rounded"
-      :text = "text"
-      ></v-calculator>
+      <v-container >
+        <h1>Vuetify-numeric demo page</h1>
+        <v-row>
+        <v-col cols = 2>
+        <v-text-field xs3
+          v-model="label"
+          label="Label"
+        ></v-text-field>
         </v-col>
-        <v-col>
+        <v-col cols = 2>
+        <v-text-field xs3
+          v-model="hint"
+          label="Hint"
+        ></v-text-field>
+        </v-col>
+        <v-col cols = 2>
+        <v-text-field xs3
+          v-model = "prefix"
+          label="prefix"
+        ></v-text-field>
+        </v-col>
+        <v-col cols = 2>
+        <v-select xs3
+          :items = "locales"
+          v-model = "locale"
+          label="current locale"
+        ></v-select>
+        </v-col>
+        <v-col cols = 2>
+        <v-checkbox xs3
+          v-model = "useGrouping"
+          label="group digits"
+        ></v-checkbox>
+        </v-col>
+        <v-col cols = 2>
+        <v-text-field xs3
+          v-model = "precision"
+          label="precision"
+        ></v-text-field>
+        </v-col>
+        </v-row>
+        <v-row>
           <v-switch v-model="fab" class="ma-2" label="fab"></v-switch>
           <v-switch v-model="outlined" class="ma-2" label="outlined"></v-switch>
           <v-switch v-model="rounded" class="ma-2" label="rounded"></v-switch>
           <v-switch v-model="text" class="ma-2" label="text"></v-switch>
-          <v-switch v-model="useGrouping" class="ma-2" label="useGrouping"></v-switch>
-          <v-switch v-model="dark" class="ma-2" label="dark"></v-switch>
-        </v-col>
-      </v-row>
+          <v-switch v-model="clearable" class="ma-2" label="clearable"></v-switch>
+          <v-switch v-model="readonly" class="ma-2" label="readonly"></v-switch>
+        </v-row>
+        <v-row>
+          <v-col cols = 4>
+        <v-text-field xs3
+          type="number"
+          v-model.number = "value"
+          label="value external"
+          outlined
+          clearable
+          hint="Simulate external value change"
+        ></v-text-field>
+          </v-col>
+        </v-row>
+      <v-numeric
+      :label = "label"
+      :hint = "hint"
+      :placeholder = "placeholder"
+      :locale = "locale"
+      :prefix = "prefix"
+      :useGrouping = "useGrouping"
+      :precision = "precision"
+      :fab = "fab"
+      :outlined = "outlined"
+      :rounded = "rounded"
+      :text = "text"
+      :clearable = "clearable"
+      :readonly = "readonly"
+      v-model = "value"
+      ></v-numeric>
+      </v-container>
     </v-content>
   </v-app>
 </template>
@@ -38,19 +95,19 @@
 <script lang="ts">
 import Vue from 'vue'
 import VNumeric from './components/VNumeric/VNumeric'
-import VNumericInput from './components/VNumeric/VNumericInput'
-import VCalculator from './components/VNumeric/VCalculator'
 
 export default Vue.extend({
   name: 'App',
 
   components: {
-    VNumeric,
-    VNumericInput,
-    VCalculator
+    VNumeric
   },
 
   data: () => ({
+    label: 'My label',
+    hint: 'My hint',
+    clearable: false,
+    placeholder: 'type your number here',
     dark: false,
     fab: false,
     outlined: false,
@@ -58,7 +115,12 @@ export default Vue.extend({
     text: false,
     numPrecision: 2,
     useGrouping: false,
-    prefix: '$'
+    prefix: '$',
+    precision: 3,
+    locale: 'en-US',
+    locales: ['en-US', 'ru-RU', 'zh-ZH'],
+    readonly: false,
+    value: 0
   })
 })
 </script>

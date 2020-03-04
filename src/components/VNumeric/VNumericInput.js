@@ -41,7 +41,8 @@ export default Vue.extend({
   data: () => ({
     internalValue: 0,
     fractDigitsEdited: false,
-    fractPart: '0'
+    fractPart: '0',
+    isFocused: false
   }),
   computed: {
     numberFormatter () {
@@ -96,9 +97,17 @@ export default Vue.extend({
       })
     },
     activateCalculator () {
-      this.$emit('activate-calculator', this.internalValue)
+      if (!this.readonly) {
+        this.$emit('activate-calculator', this.internalValue)
+      }
     },
     keyProcess (keyEvent) {
+      if (!this.isFocused) return
+      if (this.readonly) {
+        keyEvent.preventDefault()
+        keyEvent.stopPropagation()
+        return
+      }
       if (keyEvent.key !== 'ArrowLeft' && keyEvent.key !== 'ArrowRight') {
         keyEvent.preventDefault()
       }
@@ -141,6 +150,13 @@ export default Vue.extend({
         strVal = strVal + '.' + this.fractPart
       }
       this.internalValue = Number(strVal)
+    },
+    updateDimensions () {
+      const rect = this.$el.getBoundingClientRect()
+      this.$emit('resize-numeric-input', {
+        bottom: rect.bottom,
+        right: rect.right
+      })
     }
   },
   mounted () {
@@ -149,6 +165,12 @@ export default Vue.extend({
       input.setAttribute('type', 'text')
       input.style.textAlign = 'right'
     }
+    window.addEventListener('resize', this.updateDimensions)
+    window.addEventListener('load', this.updateDimensions)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.updateDimensions)
+    window.removeEventListener('load', this.updateDimensions)
   },
   render () {
     const currentProps = Object.assign({}, this.$props)
@@ -161,6 +183,8 @@ export default Vue.extend({
       props: currentProps,
       on: {
         keydown: this.keyProcess,
+        focus: () => { this.isFocused = true },
+        blur: () => { this.isFocused = false },
         'click:clear': this.clearValue,
         'click:append': this.activateCalculator
       }

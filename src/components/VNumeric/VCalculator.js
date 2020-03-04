@@ -9,6 +9,10 @@ export default mixins(
 ).extend({
   name: 'v-calculator',
   props: {
+    isActive: {
+      type: Boolean,
+      default: false
+    },
     elevation: {
       type: Number,
       default: 0
@@ -37,19 +41,37 @@ export default mixins(
       type: Boolean,
       default: true
     },
+    locale: {
+      type: String,
+      default: 'en-US'
+    },
+    precision: {
+      type: Number,
+      default: 0
+    },
     initialValue: {
       type: Number,
       default: 0
+    },
+    negativeTextColor: {
+      type: String,
+      default: 'red'
     }
   },
   computed: {
     numberFormatter () {
-      return new Intl.NumberFormat('en-US', {
-        useGrouping: this.useGrouping
+      return new Intl.NumberFormat(this.locale, {
+        useGrouping: this.useGrouping,
+        minimumFractionDigits: this.precision
       })
     },
     resultNumber () {
       return this.numberFormatter.format(this.value)
+    },
+    computedColor () {
+      if (Number(this.value) < 0 && this.negativeTextColor) {
+        return this.negativeTextColor
+      } else return undefined
     }
   },
   data: () => ({
@@ -58,11 +80,32 @@ export default mixins(
     operation: undefined
   }),
   watch: {
-    initialValue (newValue) {
-      this.value = newValue
+    initialValue: {
+      immediate: true,
+      deep: true,
+      handler (newVal) {
+        if (newVal) {
+          this.value = newVal.toString()
+        }
+      }
+    },
+    computedColor (newVal) {
+      const input = this.genResultInput()
+      input.style.color = newVal || null
     }
   },
   methods: {
+    reset () {
+      this.value = '0'
+      this.operation = undefined
+      this.operand = 0
+    },
+    genResultInput () {
+      const inputs = this.$refs.calcResult.$el.getElementsByTagName('input')
+      if (inputs && inputs.length > 0) {
+        return inputs[0]
+      }
+    },
     getOperation (simbol) {
       if (simbol === '+') return (a, b) => { return Number(a) + Number(b) }
       else if (simbol === '-') return (a, b) => { return Number(a) - Number(b) }
@@ -71,6 +114,7 @@ export default mixins(
       else if (simbol === '%') return (a, b) => { return (Number(a) / 100) * Number(b) }
     },
     changeValue (newVal) {
+      if (!this.isActive) return
       let v
       if (newVal.key) {
         v = newVal.key
@@ -87,9 +131,7 @@ export default mixins(
           this.value = this.value.length <= 1 ? '0' : this.value.substring(0, this.value.length - 1)
         }
       } else if (v.toUpperCase() === 'C') {
-        this.value = '0'
-        this.operation = undefined
-        this.operand = 0
+        this.reset()
       } else if (v === ',' || v === '.') {
         if (this.value.indexOf('.') === -1) {
           this.value += '.'
@@ -111,6 +153,9 @@ export default mixins(
         if (v === 'Enter' || v === 'OK') this.returnValue()
       } else if (v === 'CE') {
         this.value = '0'
+      } else if (v === 'Escape') {
+        this.reset()
+        this.$emit('return-value', undefined)
       }
     },
     returnValue () {
@@ -185,6 +230,7 @@ export default mixins(
     },
     genResult () {
       return this.$createElement(VTextField, {
+        ref: 'calcResult',
         props: {
           outlined: true,
           reverse: true,
@@ -192,14 +238,14 @@ export default mixins(
           value: this.resultNumber
         },
         style: {
-          padding: '12px'
+          padding: '12px',
+          'font-size': '24px'
         }
       })
     }
   },
-  created () {
+  mounted () {
     document.addEventListener('keydown', this.changeValue)
-    this.value = this.initialValue.toString()
   },
   beforeDestroy () {
     document.removeEventListener('keydown', this.changeValue)
@@ -213,10 +259,17 @@ export default mixins(
     content.push(this.genResult())
     content.push(layer1, layer2, layer3, layer4)
     return this.$createElement(VSheet, {
+      attrs: {
+        tabindex: 0
+      },
       props: {
         maxWidth: '288px',
         elevation: this.elevation,
         dark: this.dark
+      },
+      on: {
+        focus: () => { this.isFocused = true },
+        blur: () => { this.isFocused = false }
       }
     }, content)
   }
