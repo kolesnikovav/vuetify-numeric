@@ -61,8 +61,7 @@ export default mixins(
   computed: {
     numberFormatter () {
       return new Intl.NumberFormat(this.locale, {
-        useGrouping: this.useGrouping,
-        minimumFractionDigits: this.precision
+        useGrouping: this.useGrouping
       })
     },
     resultNumber () {
@@ -156,6 +155,8 @@ export default mixins(
       } else if (v === 'Escape') {
         this.reset()
         this.$emit('return-value', undefined)
+      } else if (v === 'Delete') {
+        this.reset()
       }
     },
     returnValue () {
@@ -235,7 +236,8 @@ export default mixins(
           outlined: true,
           reverse: true,
           readonly: true,
-          value: this.resultNumber
+          value: this.resultNumber,
+          autofocus: true
         },
         style: {
           padding: '12px',
