@@ -14,7 +14,7 @@ export default Vue.extend({
       type: Number,
       default: Number.MAX_VALUE
     },
-    lenght: {
+    length: {
       type: Number,
       default: 10
     },
