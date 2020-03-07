@@ -95,7 +95,12 @@ export default Vue.extend({
     },
     changeValue (val: string|number|undefined) {
       if (val) {
-        this.internalValue = Number(val)
+        if (this.computedPrecision > 0) {
+          const p = Math.pow(10, this.computedPrecision)
+          this.internalValue = Math.round(Number(val) * p) / p
+        } else {
+          this.internalValue = Math.round(Number(val))
+        }
         this.$emit('input', this.internalValue)
       }
     },

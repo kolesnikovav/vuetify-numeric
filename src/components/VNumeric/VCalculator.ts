@@ -160,6 +160,7 @@ export default Vue.extend({
     },
     returnValue (): void {
       this.$emit('return-value', this.value)
+      this.reset()
     },
     calculate (): void {
       if (this.value && this.operand && this.operation) {
