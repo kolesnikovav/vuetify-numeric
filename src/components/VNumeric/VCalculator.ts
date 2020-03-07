@@ -1,5 +1,7 @@
-import Vue from 'vue'
+import Vue, { VNode } from 'vue'
 import { VTextField, VBtn, VRow, VSheet } from 'vuetify/lib'
+
+type operationType = ((a: number|string, b: number| string) => number)|undefined
 
 export default Vue.extend({
   name: 'v-calculator',
@@ -54,16 +56,16 @@ export default Vue.extend({
     }
   },
   computed: {
-    numberFormatter () {
+    numberFormatter (): Intl.NumberFormat {
       return new Intl.NumberFormat(this.locale, {
         useGrouping: this.useGrouping
       })
     },
-    resultNumber () {
-      return this.numberFormatter.format(this.value)
+    resultNumber (): string {
+      return this.numberFormatter.format(Number(this.value))
     },
-    computedColor () {
-      if (Number(this.value) < 0 && this.negativeTextColor) {
+    computedColor (): string| undefined {
+      if (Number(this.$data.value) < 0 && this.negativeTextColor) {
         return this.negativeTextColor
       } else return undefined
     }
@@ -71,7 +73,7 @@ export default Vue.extend({
   data: () => ({
     value: '0',
     operand: 0,
-    operation: undefined
+    operation: undefined as operationType
   }),
   watch: {
     initialValue: {
@@ -85,32 +87,34 @@ export default Vue.extend({
     },
     computedColor (newVal) {
       const input = this.genResultInput()
-      input.style.color = newVal || null
+      if (input) {
+        input.style.color = newVal || null
+      }
     }
   },
   methods: {
-    reset () {
+    reset (): void {
       this.value = '0'
       this.operation = undefined
       this.operand = 0
     },
-    genResultInput () {
-      const inputs = this.$refs.calcResult.$el.getElementsByTagName('input')
+    genResultInput (): HTMLInputElement| undefined {
+      const inputs = (this.$refs.calcResult as Vue).$el.getElementsByTagName('input')
       if (inputs && inputs.length > 0) {
         return inputs[0]
       }
     },
-    getOperation (simbol) {
-      if (simbol === '+') return (a, b) => { return Number(a) + Number(b) }
-      else if (simbol === '-') return (a, b) => { return Number(a) - Number(b) }
-      else if (simbol === '*') return (a, b) => { return Number(a) * Number(b) }
-      else if (simbol === '÷' || simbol === '/') return (a, b) => { return Number(a) / Number(b) }
-      else if (simbol === '%') return (a, b) => { return (Number(a) / 100) * Number(b) }
+    getOperation (simbol: string): operationType {
+      if (simbol === '+') return (a: number|string, b: number|string) => { return Number(a) + Number(b) }
+      else if (simbol === '-') return (a: number|string, b: number|string) => { return Number(a) - Number(b) }
+      else if (simbol === '*') return (a: number|string, b: number|string) => { return Number(a) * Number(b) }
+      else if (simbol === '÷' || simbol === '/') return (a: number|string, b: number|string) => { return Number(a) / Number(b) }
+      else if (simbol === '%') return (a: number|string, b: number|string) => { return (Number(a) / 100) * Number(b) }
     },
-    changeValue (newVal) {
+    changeValue (newVal: KeyboardEvent| string) {
       if (!this.isActive) return
-      let v
-      if (newVal.key) {
+      let v: string
+      if (newVal instanceof KeyboardEvent) {
         v = newVal.key
       } else {
         v = newVal
@@ -134,11 +138,11 @@ export default Vue.extend({
         if (this.value.toString().startsWith('-')) this.value = this.value.toString().substring(1, this.value.length)
         else this.value = '-' + this.value
       } else if (v === '1/x') {
-        if (this.value !== '0') this.value = 1 / Number.parseFloat(this.value)
+        if (this.value !== '0') this.value = (1 / Number.parseFloat(this.value)).toString()
       } else if (['+', '-', '*', '÷', '/', '%'].includes(v)) {
         this.calculate()
         this.operation = this.getOperation(v)
-        this.operand = this.value
+        this.operand = Number(this.value)
         this.value = '0'
       } else if (['=', 'Enter', 'OK'].includes(v)) {
         this.calculate()
@@ -154,16 +158,16 @@ export default Vue.extend({
         this.reset()
       }
     },
-    returnValue () {
+    returnValue (): void {
       this.$emit('return-value', this.value)
     },
-    calculate () {
+    calculate (): void {
       if (this.value && this.operand && this.operation) {
         const res = this.operation(this.operand, this.value)
         this.value = res.toString()
       }
     },
-    genNumberButton (numberValue) {
+    genNumberButton (numberValue: string): VNode {
       return this.$createElement(VBtn, {
         style: {
           'padding-left': '0px',
@@ -185,7 +189,7 @@ export default Vue.extend({
         }
       })
     },
-    genActionsButton (actValue) {
+    genActionsButton (actValue: string): VNode {
       return this.$createElement(VBtn, {
         style: {
           'padding-left': '0px',
@@ -207,8 +211,8 @@ export default Vue.extend({
         }
       })
     },
-    genRow (content) {
-      const rowContent = []
+    genRow (content: string[]): VNode|VNode[] {
+      const rowContent: VNode[] = []
       const actButtons = ['+', '±', 'C', '-', '%', 'CE', '*', '1/x', '←', '.', '÷', '=', 'OK']
       content.map(v => {
         if (actButtons.includes(v)) {
@@ -224,7 +228,7 @@ export default Vue.extend({
         }
       }, rowContent)
     },
-    genResult () {
+    genResult (): VNode {
       return this.$createElement(VTextField, {
         ref: 'calcResult',
         props: {
@@ -247,7 +251,7 @@ export default Vue.extend({
   beforeDestroy () {
     document.removeEventListener('keydown', this.changeValue)
   },
-  render () {
+  render (): VNode {
     const layer1 = this.genRow(['7', '8', '9', '+', '±', 'C'])
     const layer2 = this.genRow(['4', '5', '6', '-', '%', 'CE'])
     const layer3 = this.genRow(['1', '2', '3', '*', '1/x', '←'])
@@ -263,10 +267,6 @@ export default Vue.extend({
         maxWidth: '288px',
         elevation: this.elevation,
         dark: this.dark
-      },
-      on: {
-        focus: () => { this.isFocused = true },
-        blur: () => { this.isFocused = false }
       }
     }, content)
   }

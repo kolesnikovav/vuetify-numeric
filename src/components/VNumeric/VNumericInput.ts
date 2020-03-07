@@ -1,5 +1,8 @@
-import Vue from 'vue'
+import Vue, { VNode } from 'vue'
 import { VTextField } from 'vuetify/lib'
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const VTextFieldProps = ((VTextField as any).options as any).props
 
 export default Vue.extend({
   name: 'v-numeric-input',
@@ -36,7 +39,7 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
-    ...VTextField.options.props
+    ...VTextFieldProps
   },
   data: () => ({
     internalValue: 0,
@@ -45,27 +48,27 @@ export default Vue.extend({
     isFocused: false
   }),
   computed: {
-    numberFormatter () {
-      return new Intl.NumberFormat(this.locale, {
-        useGrouping: this.useGrouping,
-        minimumFractionDigits: this.precision
+    numberFormatter (): Intl.NumberFormat {
+      return new Intl.NumberFormat(this.$props.locale, {
+        useGrouping: this.$props.useGrouping,
+        minimumFractionDigits: this.$props.precision
       })
     },
-    computedValue () {
+    computedValue (): string {
       if (this.internalValue) {
-        return (this.prefix ? this.prefix : '') + this.numberFormatter.format(this.internalValue)
+        return (this.$props.prefix ? this.$props.prefix : '') + this.numberFormatter.format(this.internalValue)
       }
-      return (this.prefix ? this.prefix : '') + this.numberFormatter.format(0)
+      return (this.$props.prefix ? this.$props.prefix : '') + this.numberFormatter.format(0)
     },
-    computedColor () {
-      if (this.internalValue < 0 && this.negativeTextColor) {
-        return this.negativeTextColor
-      } else return this.color
+    computedColor (): string | undefined {
+      if (this.internalValue < 0 && this.$props.negativeTextColor) {
+        return this.$props.negativeTextColor
+      } else return this.$props.color
     }
   },
   watch: {
     value (val) {
-      this.internalValue = val
+      this.$data.internalValue = val
     },
     internalValue (val) {
       this.$emit('change-value', val)
@@ -89,21 +92,21 @@ export default Vue.extend({
       this.fractPart = '0'
       this.fractDigitsEdited = false
       this.$nextTick(() => {
-        if (this.value) {
-          this.internalValue = this.value
+        if (this.$data.value) {
+          this.internalValue = this.$data.value
         } else {
           this.internalValue = 0
         }
       })
     },
     activateCalculator () {
-      if (!this.readonly) {
+      if (!this.$props.readonly) {
         this.$emit('activate-calculator', this.internalValue)
       }
     },
-    keyProcess (keyEvent) {
+    keyProcess (keyEvent: KeyboardEvent) {
       if (!this.isFocused) return
-      if (this.readonly) {
+      if (this.$props.readonly) {
         keyEvent.preventDefault()
         keyEvent.stopPropagation()
         return
@@ -147,11 +150,11 @@ export default Vue.extend({
           }
         }
       } else if ([',', '.'].includes(keyEvent.key)) {
-        if (this.precision > 0) {
+        if (this.$props.precision > 0) {
           this.fractDigitsEdited = !this.fractDigitsEdited
         }
       }
-      if (this.precision > 0) {
+      if (this.$props.precision > 0) {
         strVal = strVal + '.' + this.fractPart
       }
       this.internalValue = Number(strVal)
@@ -162,6 +165,9 @@ export default Vue.extend({
         bottom: rect.bottom,
         right: rect.right
       })
+    },
+    setFocus (val: boolean) {
+      this.isFocused = val
     }
   },
   mounted () {
@@ -177,7 +183,7 @@ export default Vue.extend({
     window.removeEventListener('resize', this.updateDimensions)
     window.removeEventListener('load', this.updateDimensions)
   },
-  render () {
+  render (): VNode {
     const currentProps = Object.assign({}, this.$props)
     currentProps.value = this.computedValue
     if (currentProps.prefix) {
@@ -188,8 +194,8 @@ export default Vue.extend({
       props: currentProps,
       on: {
         keydown: this.keyProcess,
-        focus: () => { this.isFocused = true },
-        blur: () => { this.isFocused = false },
+        focus: () => this.setFocus(true),
+        blur: () => this.setFocus(false),
         'click:clear': this.clearValue,
         'click:append': this.activateCalculator
       }

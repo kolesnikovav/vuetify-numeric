@@ -1,7 +1,15 @@
-import Vue from 'vue'
+import Vue, { VNode } from 'vue'
 import { VMenu, VTextField } from 'vuetify/lib'
 import VCalculator from './VCalculator'
 import VNumericInput from './VNumericInput'
+
+interface PosMenuType {
+  bottom: number;
+  right: number;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const VTextFieldProps = ((VTextField as any).options as any).props
 
 export default Vue.extend({
   name: 'v-numeric',
@@ -55,11 +63,11 @@ export default Vue.extend({
       type: Boolean,
       default: false
     },
-    ...VTextField.options.props
+    ...VTextFieldProps
   },
   computed: {
-    computedPrecision () {
-      return Number(this.precision)
+    computedPrecision (): number {
+      return Number(this.$props.precision)
     }
   },
   data: () => ({
@@ -73,7 +81,7 @@ export default Vue.extend({
       deep: true,
       immediate: true,
       handler (newVal) {
-        this.internalValue = Number(newVal)
+        this.$data.internalValue = Number(newVal)
       }
     }
   },
@@ -81,43 +89,43 @@ export default Vue.extend({
     activateCalculator () {
       this.isMenuActive = true
     },
-    closeCalculator (val) {
+    closeCalculator (val: string|number|undefined) {
       this.isMenuActive = false
       this.changeValue(val)
     },
-    changeValue (val) {
+    changeValue (val: string|number|undefined) {
       if (val) {
         this.internalValue = Number(val)
         this.$emit('input', this.internalValue)
       }
     },
-    genCalculator () {
+    genCalculator (): VNode {
       return this.$createElement(VCalculator, {
         props: {
           initialValue: this.internalValue,
-          locale: this.locale,
-          useGrouping: this.useGrouping,
-          negativeTextColor: this.negativeTextColor,
+          locale: this.$props.locale,
+          useGrouping: this.$props.useGrouping,
+          negativeTextColor: this.$props.negativeTextColor,
           precision: this.computedPrecision,
-          elevation: this.elevation,
-          fab: this.fab,
-          outlined: this.outlined,
-          rounded: this.rounded,
-          text: this.text,
-          dark: this.dark,
-          dense: this.dense,
+          elevation: this.$props.elevation,
+          fab: this.$props.fab,
+          outlined: this.$props.outlined,
+          rounded: this.$props.rounded,
+          text: this.$props.text,
+          dark: this.$props.dark,
+          dense: this.$props.dense,
           isActive: this.isMenuActive
         },
         on: {
-          'return-value': (val) => this.closeCalculator(val)
+          'return-value': (val: string|number|undefined) => this.closeCalculator(val)
         }
       })
     },
-    setMenuPosition (rect) {
-      this.yMenuPos = rect.bottom
-      this.xMenuPos = rect.right - 288
+    setMenuPosition (rect: PosMenuType) {
+      this.$data.yMenuPos = rect.bottom
+      this.$data.xMenuPos = rect.right - 288
     },
-    genInput () {
+    genInput (): VNode {
       const props = Object.assign({}, this.$props)
       props.value = this.internalValue
       props.precision = this.computedPrecision
@@ -126,13 +134,13 @@ export default Vue.extend({
         slot: 'activator',
         on: {
           'activate-calculator': () => this.activateCalculator(),
-          'change-value': (val) => this.changeValue(val),
-          'resize-numeric-input': (rect) => this.setMenuPosition(rect)
+          'change-value': (val: string|number|undefined) => this.changeValue(val),
+          'resize-numeric-input': (rect: PosMenuType) => this.setMenuPosition(rect)
         }
       })
     }
   },
-  render () {
+  render (): VNode {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
     return this.$createElement(VMenu, {
@@ -142,18 +150,18 @@ export default Vue.extend({
         positionY: this.yMenuPos,
         closeOnContentClick: false,
         value: this.isMenuActive,
-        dark: this.dark,
-        dense: this.dense,
+        dark: this.$props.dark,
+        dense: this.$props.dense,
         maxWidth: '288px',
         right: true
       },
       scopedSlots: {
-        'activator' (on) {
-          return self.genInput(on)
+        'activator' () {
+          return self.genInput()
         }
       },
       on: {
-        'update:return-value': () => this.closeCalculator()
+        'update:return-value': (val: string|number|undefined) => this.closeCalculator(val)
       }
     }, [
       this.genCalculator()
