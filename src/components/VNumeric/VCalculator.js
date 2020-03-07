@@ -1,12 +1,7 @@
+import Vue from 'vue'
 import { VTextField, VBtn, VRow, VSheet } from 'vuetify/lib'
-import mixins from 'vuetify/lib/util/mixins'
-import Colorable from 'vuetify/lib/mixins/colorable'
-import Themeable from 'vuetify/lib/mixins/themeable'
 
-export default mixins(
-  Themeable, Colorable
-  /* @vue/component */
-).extend({
+export default Vue.extend({
   name: 'v-calculator',
   props: {
     isActive: {

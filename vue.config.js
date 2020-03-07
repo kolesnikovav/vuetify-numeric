@@ -15,12 +15,7 @@ module.exports = {
     ...(process.env.NODE_ENV === 'production'
       ? {
         externals: {
-          'vuetify/lib': 'vuetify/lib',
-          'vuetify/lib/util/mixins': 'vuetify/lib/util/mixins',
-
-          /* mixins */
-          'vuetify/lib/mixins/colorable': 'vuetify/lib/mixins/colorable',
-          'vuetify/lib/mixins/themeable': 'vuetify/lib/mixins/themeable'
+          'vuetify/lib': 'vuetify/lib'
         }
       }
       : {})
