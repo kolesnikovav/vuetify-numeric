@@ -5,51 +5,30 @@
         <span class="font-weight-light">VUETIFY-NUMERIC demo page</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn icon large href = "https://github.com/kolesnikovav/vuetify-numeric">
-        GitHub
-      </v-btn>
+      <v-btn icon large href="https://github.com/kolesnikovav/vuetify-numeric">GitHub</v-btn>
     </v-app-bar>
     <v-content>
-      <v-container >
+      <v-container>
         <h1>Vuetify-numeric demo page</h1>
         <v-row>
-        <v-col cols = 2>
-        <v-text-field xs3
-          v-model="label"
-          label="Label"
-        ></v-text-field>
-        </v-col>
-        <v-col cols = 2>
-        <v-text-field xs3
-          v-model="hint"
-          label="Hint"
-        ></v-text-field>
-        </v-col>
-        <v-col cols = 2>
-        <v-text-field xs3
-          v-model = "prefix"
-          label="prefix"
-        ></v-text-field>
-        </v-col>
-        <v-col cols = 2>
-        <v-select xs3
-          :items = "locales"
-          v-model = "locale"
-          label="current locale"
-        ></v-select>
-        </v-col>
-        <v-col cols = 2>
-        <v-checkbox xs3
-          v-model = "useGrouping"
-          label="group digits"
-        ></v-checkbox>
-        </v-col>
-        <v-col cols = 2>
-        <v-text-field xs3
-          v-model = "precision"
-          label="precision"
-        ></v-text-field>
-        </v-col>
+          <v-col cols="2">
+            <v-text-field xs3 v-model="label" label="Label"></v-text-field>
+          </v-col>
+          <v-col cols="2">
+            <v-text-field xs3 v-model="hint" label="Hint"></v-text-field>
+          </v-col>
+          <v-col cols="2">
+            <v-text-field xs3 v-model="prefix" label="prefix"></v-text-field>
+          </v-col>
+          <v-col cols="2">
+            <v-select xs3 :items="locales" v-model="locale" label="current locale"></v-select>
+          </v-col>
+          <v-col cols="2">
+            <v-checkbox xs3 v-model="useGrouping" label="group digits"></v-checkbox>
+          </v-col>
+          <v-col cols="2">
+            <v-text-field xs3 v-model="precision" label="precision"></v-text-field>
+          </v-col>
         </v-row>
         <v-row>
           <v-switch v-model="fab" class="ma-2" label="fab"></v-switch>
@@ -60,33 +39,44 @@
           <v-switch v-model="readonly" class="ma-2" label="readonly"></v-switch>
         </v-row>
         <v-row>
-          <v-col cols = 4>
-        <v-text-field xs3
-          type="number"
-          v-model.number = "value"
-          label="value external"
-          outlined
-          clearable
-          hint="Simulate external value change"
-        ></v-text-field>
+          <v-col cols="4">
+            <v-text-field
+              xs2
+              type="number"
+              v-model.number="value"
+              label="value external"
+              outlined
+              clearable
+              hint="Simulate external value change"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field xs2 type="number" v-model.number="min" label="Minimum" outlined clearable></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field xs2 type="number" v-model.number="max" label="Maximum" outlined clearable></v-text-field>
           </v-col>
         </v-row>
-      <v-numeric
-      :label = "label"
-      :hint = "hint"
-      :placeholder = "placeholder"
-      :locale = "locale"
-      :prefix = "prefix"
-      :useGrouping = "useGrouping"
-      :precision = "precision"
-      :fab = "fab"
-      :outlined = "outlined"
-      :rounded = "rounded"
-      :text = "text"
-      :clearable = "clearable"
-      :readonly = "readonly"
-      v-model = "value"
-      ></v-numeric>
+        <p>v-numeric component example</p>
+        <v-numeric
+          xs3
+          :label="label"
+          :hint="hint"
+          :placeholder="placeholder"
+          :locale="locale"
+          :prefix="prefix"
+          :useGrouping="useGrouping"
+          :precision="precision"
+          :fab="fab"
+          :outlined="outlined"
+          :rounded="rounded"
+          :text="text"
+          :clearable="clearable"
+          :readonly="readonly"
+          :min="min"
+          :max="max"
+          v-model="value"
+        ></v-numeric>
       </v-container>
     </v-content>
   </v-app>
@@ -110,11 +100,13 @@ export default Vue.extend({
     placeholder: 'type your number here',
     dark: false,
     fab: false,
-    outlined: false,
+    outlined: true,
     rounded: false,
     text: false,
     numPrecision: 2,
-    useGrouping: false,
+    useGrouping: true,
+    min: -10000,
+    max: 25000,
     prefix: '$',
     precision: 3,
     locale: 'en-US',
@@ -126,11 +118,10 @@ export default Vue.extend({
 </script>
 
 <style >
-   .demo-content {
-     display: flex;
-     align-content: center;
-     justify-content: center;
-     padding: 200px
-   }
-
+.demo-content {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 200px;
+}
 </style>

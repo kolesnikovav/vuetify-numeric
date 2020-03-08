@@ -94,13 +94,16 @@ export default Vue.extend({
       this.changeValue(val)
     },
     changeValue (val: string|number|undefined) {
+      let result: number
       if (val) {
         if (this.computedPrecision > 0) {
           const p = Math.pow(10, this.computedPrecision)
-          this.internalValue = Math.round(Number(val) * p) / p
+          result = Math.round(Number(val) * p) / p
         } else {
-          this.internalValue = Math.round(Number(val))
+          result = Math.round(Number(val))
         }
+        result = Math.max(Math.min(this.$props.max, result), this.$props.min)
+        this.internalValue = result
         this.$emit('input', this.internalValue)
       }
     },

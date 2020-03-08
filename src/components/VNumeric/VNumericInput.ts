@@ -157,7 +157,13 @@ export default Vue.extend({
       if (this.$props.precision > 0) {
         strVal = strVal + '.' + this.fractPart
       }
-      this.internalValue = Number(strVal)
+      let result = Number(strVal)
+      if (this.$props.precision > 0) {
+        const p = Math.pow(10, this.$props.precision)
+        result = Math.round(Number(result) * p) / p
+      }
+      result = result = Math.max(Math.min(this.$props.max, result), this.$props.min)
+      this.internalValue = result
     },
     updateDimensions () {
       const rect = this.$el.getBoundingClientRect()
