@@ -108,7 +108,7 @@ export default Vue.extend({
     min: -10000,
     max: 25000,
     prefix: '$',
-    precision: 3,
+    precision: 2,
     locale: 'en-US',
     locales: ['en-US', 'ru-RU', 'zh-ZH'],
     readonly: false,
