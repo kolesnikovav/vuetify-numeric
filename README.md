@@ -33,7 +33,7 @@ Numeric input components for use with [vuetifyjs](https://vuetifyjs.com).
 | - | Change your input number sign |
 
 ## Demo & Playground
-See [Live demo ](https://kolesnikovav.github.io/vuetify-numeric/).
+See [Live demo ](https://kolesnikovav.github.io/vuetify-numeric/). or Codesandbox example [codesandbox](https://codesandbox.io/s/condescending-mendel-5zpqn)
 
 ## The v-numeric component
 The component extends the Vuetify `v-text-field` component.
