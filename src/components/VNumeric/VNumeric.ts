@@ -138,12 +138,16 @@ export default Vue.extend({
       props.value = this.internalValue
       props.precision = this.computedPrecision
       return this.$createElement(VNumericInput, {
+        domProps: {
+          value: this.internalValue
+        },
         props,
         slot: 'activator',
         on: {
           'activate-calculator': () => this.activateCalculator(),
           'change-value': (val: string|number|undefined) => this.changeValue(val),
-          'resize-numeric-input': (rect: PosMenuType) => this.setMenuPosition(rect)
+          'resize-numeric-input': (rect: PosMenuType) => this.setMenuPosition(rect),
+          input: (val: string|number) => { this.internalValue = Number(val) }
         }
       })
     }
