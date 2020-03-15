@@ -119,6 +119,9 @@ export default Vue.extend({
         this.updateDimensions()
         this.activateCalculator()
         return
+      } else if (keyEvent.key === 'Delete') {
+        this.clearValue()
+        return
       }
       const numericButtons = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
       let strVal = Math.trunc(this.internalValue).toString()
@@ -197,13 +200,17 @@ export default Vue.extend({
     }
     currentProps.appendIcon = 'mdi-calculator'
     return this.$createElement(VTextField, {
+      domProps: {
+        value: this.internalValue
+      },
       props: currentProps,
       on: {
         keydown: this.keyProcess,
         focus: () => this.setFocus(true),
         blur: () => this.setFocus(false),
         'click:clear': this.clearValue,
-        'click:append': this.activateCalculator
+        'click:append': this.activateCalculator,
+        input: (val: string) => { this.internalValue = Number(val) }
       }
     })
   }
