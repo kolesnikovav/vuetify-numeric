@@ -1,5 +1,5 @@
 import Vue, { VNode } from 'vue'
-import { VMenu, VTextField } from 'vuetify/lib'
+import { VMenuA, VTextFieldA } from '../../shims-vuetify'
 import VCalculator from './VCalculator'
 import VNumericInput from './VNumericInput'
 
@@ -9,7 +9,7 @@ interface PosMenuType {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VTextFieldProps = ((VTextField as any).options as any).props
+const VTextFieldProps = ((VTextFieldA as any).options as any).props
 
 export default Vue.extend({
   name: 'v-numeric',
@@ -155,7 +155,7 @@ export default Vue.extend({
   render (): VNode {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
-    return this.$createElement(VMenu, {
+    return this.$createElement(VMenuA, {
       props: {
         absolute: true,
         positionX: this.xMenuPos,

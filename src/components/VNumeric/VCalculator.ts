@@ -1,5 +1,5 @@
 import Vue, { VNode } from 'vue'
-import { VTextField, VBtn, VRow, VSheet } from 'vuetify/lib'
+import { VTextFieldA, VBtnA, VRowA, VSheetA } from '../../shims-vuetify'
 
 type operationType = ((a: number|string, b: number| string) => number)|undefined
 
@@ -169,7 +169,7 @@ export default Vue.extend({
       }
     },
     genNumberButton (numberValue: string): VNode {
-      return this.$createElement(VBtn, {
+      return this.$createElement(VBtnA, {
         style: {
           'padding-left': '0px',
           'padding-right': '0px',
@@ -191,7 +191,7 @@ export default Vue.extend({
       })
     },
     genActionsButton (actValue: string): VNode {
-      return this.$createElement(VBtn, {
+      return this.$createElement(VBtnA, {
         style: {
           'padding-left': '0px',
           'padding-right': '0px',
@@ -214,7 +214,8 @@ export default Vue.extend({
     },
     genRow (content: string[]): VNode|VNode[] {
       const rowContent: VNode[] = []
-      const actButtons = ['+', '±', 'C', '-', '%', 'CE', '*', '1/x', '←', '.', '÷', '=', 'OK']
+      // const actButtons = ['+', '±', 'C', '-', '%', 'CE', '*', '1/x', '←', '.', '÷', '=', 'OK']
+      const actButtons = ['+', '\u00B1', 'C', '-', '%', 'CE', '*', '1/x', '\u2190', '.', '\u00F7', '=', 'OK']
       content.map(v => {
         if (actButtons.includes(v)) {
           rowContent.push(this.genActionsButton(v))
@@ -222,7 +223,7 @@ export default Vue.extend({
           rowContent.push(this.genNumberButton(v))
         }
       })
-      return this.$createElement(VRow, {
+      return this.$createElement(VRowA, {
         style: {
           'margin-left': '0px',
           'margin-right': '0px'
@@ -230,7 +231,7 @@ export default Vue.extend({
       }, rowContent)
     },
     genResult (): VNode {
-      return this.$createElement(VTextField, {
+      return this.$createElement(VTextFieldA, {
         ref: 'calcResult',
         props: {
           outlined: true,
@@ -253,14 +254,14 @@ export default Vue.extend({
     document.removeEventListener('keydown', this.changeValue)
   },
   render (): VNode {
-    const layer1 = this.genRow(['7', '8', '9', '+', '±', 'C'])
+    const layer1 = this.genRow(['7', '8', '9', '+', '\u00B1', 'C'])
     const layer2 = this.genRow(['4', '5', '6', '-', '%', 'CE'])
-    const layer3 = this.genRow(['1', '2', '3', '*', '1/x', '←'])
-    const layer4 = this.genRow(['0', '00', '.', '÷', '=', 'OK'])
+    const layer3 = this.genRow(['1', '2', '3', '*', '1/x', '\u2190'])
+    const layer4 = this.genRow(['0', '00', '.', '\u00F7', '=', 'OK'])
     const content = []
     content.push(this.genResult())
     content.push(layer1, layer2, layer3, layer4)
-    return this.$createElement(VSheet, {
+    return this.$createElement(VSheetA, {
       attrs: {
         tabindex: 0
       },
