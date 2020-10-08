@@ -1,8 +1,8 @@
 import Vue, { VNode } from 'vue'
-import { VTextField } from 'vuetify/lib'
+import { VTextFieldA } from '../../shims-vuetify'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VTextFieldProps = ((VTextField as any).options as any).props
+const VTextFieldProps = ((VTextFieldA as any).options as any).props
 
 export default Vue.extend({
   name: 'v-numeric-input',
@@ -199,7 +199,7 @@ export default Vue.extend({
       currentProps.prefix = undefined
     }
     currentProps.appendIcon = 'mdi-calculator'
-    return this.$createElement(VTextField, {
+    return this.$createElement(VTextFieldA, {
       domProps: {
         value: this.internalValue
       },

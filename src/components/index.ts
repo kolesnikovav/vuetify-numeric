@@ -16,3 +16,7 @@ export {
   VNumericInput,
   VCalculator
 }
+
+if (typeof window !== 'undefined' && window.Vue) {
+  window.Vue.use(install)
+}
