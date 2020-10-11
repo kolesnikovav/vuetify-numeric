@@ -127,7 +127,7 @@ You can use this library without installation, via cdn provider
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify-numeric.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify-numeric@0.1.x/vuetify-numeric.umd.min.js"></script>
   <script>
     new Vue({
       el: '#app',

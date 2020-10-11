@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Vue, { VueConstructor } from 'vue'
 
 import {
