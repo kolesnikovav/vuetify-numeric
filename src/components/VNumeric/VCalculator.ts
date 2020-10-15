@@ -53,6 +53,10 @@ export default Vue.extend({
     negativeTextColor: {
       type: String,
       default: 'red'
+    },
+    calcStyle: {
+      type: Object,
+      default: undefined
     }
   },
   computed: {
@@ -68,7 +72,43 @@ export default Vue.extend({
       if (Number(this.$data.value) < 0 && this.negativeTextColor) {
         return this.negativeTextColor
       } else return undefined
+    },
+    computedOutlined (): boolean {
+      if (!this.calcStyle) return this.outlined
+      if (this.calcStyle.outlined === undefined) return this.outlined
+      return this.calcStyle.outlined
+    },
+    computedRounded (): boolean {
+      if (!this.calcStyle) return this.rounded
+      if (this.calcStyle.rounded === undefined) return this.rounded
+      return this.calcStyle.rounded
+    },
+    computedText (): boolean {
+      if (!this.calcStyle) return this.text
+      if (this.calcStyle.text === undefined) return this.text
+      return this.calcStyle.text
+    },
+    computedTile (): boolean {
+      if (!this.calcStyle) return false
+      return (this.calcStyle.tile === undefined) ? false : this.calcStyle.tile
+    },
+    computedLarge (): boolean {
+      if (!this.calcStyle) return false
+      return (this.calcStyle.large === undefined) ? false : this.calcStyle.large
+    },
+    computedSmall (): boolean {
+      if (!this.calcStyle) return false
+      return (this.calcStyle.small === undefined) ? false : this.calcStyle.small
+    },
+    textOperand (): string {
+      if (!this.operand) return ''
+      return (this.operand === 0) ? '' : this.operand.toString()
     }
+    // computed
+    // fab: (this.calcStyle && this.calcStyle.fab) ? this.calcStyle.fab : this.fab,
+    // outlined: (this.calcStyle && this.calcStyle.outlined) ? this.calcStyle.outlined : this.outlined,
+    // rounded: (this.calcStyle && this.calcStyle.rounded) ? this.calcStyle.rounded : this.rounded,
+    // text: (this.calcStyle && this.calcStyle.text) ? this.calcStyle.text : this.text
   },
   data: () => ({
     value: '0',
@@ -168,6 +208,18 @@ export default Vue.extend({
         this.value = res.toString()
       }
     },
+    // genTextOperand (): VNode {
+    //   return this.$createElement('div', {
+    //     style: {
+    //       textAlign: 'right'
+    //     },
+    //     props: {
+    //       value: this.textOperand,
+    //       disabled: true,
+    //       dense: true
+    //     }
+    //   })
+    // },
     genNumberButton (numberValue: string): VNode {
       return this.$createElement(VBtnA, {
         style: {
@@ -177,10 +229,13 @@ export default Vue.extend({
           'min-width': '48px'
         },
         props: {
-          fab: this.fab,
-          outlined: this.outlined,
-          rounded: this.rounded,
-          text: this.text
+          fab: (this.calcStyle && this.calcStyle.fab) ? this.calcStyle.fab : this.fab,
+          outlined: this.computedOutlined,
+          rounded: this.computedRounded,
+          text: this.computedText,
+          tile: this.computedTile,
+          large: this.computedLarge,
+          small: this.computedSmall
         },
         domProps: {
           innerHTML: numberValue
@@ -199,10 +254,13 @@ export default Vue.extend({
           'min-width': '48px'
         },
         props: {
-          fab: this.fab,
-          outlined: this.outlined,
-          rounded: this.rounded,
-          text: this.text
+          fab: (this.calcStyle && this.calcStyle.fab) ? this.calcStyle.fab : this.fab,
+          outlined: this.computedOutlined,
+          rounded: this.computedRounded,
+          text: this.computedText,
+          tile: this.computedTile,
+          large: this.computedLarge,
+          small: this.computedSmall
         },
         domProps: {
           innerHTML: actValue
@@ -238,7 +296,9 @@ export default Vue.extend({
           reverse: true,
           readonly: true,
           value: this.resultNumber,
-          autofocus: true
+          autofocus: true,
+          hint: this.textOperand,
+          persistentHint: true
         },
         style: {
           padding: '12px',

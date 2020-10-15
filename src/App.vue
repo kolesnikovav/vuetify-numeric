@@ -7,7 +7,7 @@
       <v-spacer></v-spacer>
       <v-btn icon large href="https://github.com/kolesnikovav/vuetify-numeric">GitHub</v-btn>
     </v-app-bar>
-    <v-content>
+    <v-main>
       <v-container>
         <h1>Vuetify-numeric demo page</h1>
         <v-row>
@@ -37,6 +37,15 @@
           <v-switch v-model="text" class="ma-2" label="text"></v-switch>
           <v-switch v-model="clearable" class="ma-2" label="clearable"></v-switch>
           <v-switch v-model="readonly" class="ma-2" label="readonly"></v-switch>
+        </v-row>
+        <v-row>
+          <v-switch v-model="calcStyle.fab" class="ma-2" label="fab"></v-switch>
+          <v-switch v-model="calcStyle.tile" class="ma-2" label="tile"></v-switch>
+          <v-switch v-model="calcStyle.outlined" class="ma-2" label="outlined"></v-switch>
+          <v-switch v-model="calcStyle.rounded" class="ma-2" label="rounded"></v-switch>
+          <v-switch v-model="calcStyle.text" class="ma-2" label="text"></v-switch>
+          <v-switch v-model="calcStyle.large" class="ma-2" label="Large"></v-switch>
+          <v-switch v-model="calcStyle.small" class="ma-2" label="small"></v-switch>
         </v-row>
         <v-row>
           <v-col cols="4">
@@ -75,10 +84,11 @@
           :readonly="readonly"
           :min="min"
           :max="max"
+          :calcStyle = "calcStyle"
           v-model="value"
         ></v-numeric>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -112,7 +122,16 @@ export default Vue.extend({
     locale: 'en-US',
     locales: ['en-US', 'ru-RU', 'zh-ZH'],
     readonly: false,
-    value: 0
+    value: 0,
+    calcStyle: {
+      fab: false,
+      outlined: false,
+      rounded: false,
+      text: false,
+      tile: false,
+      large: false,
+      small: false
+    }
   })
 })
 </script>

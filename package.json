@@ -18,7 +18,7 @@
   "dependencies": {
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
-    "vuetify": "^2.2.11"
+    "vuetify": "^2.3.10"
   },
   "devDependencies": {
     "@types/jest": "^25.1.4",
