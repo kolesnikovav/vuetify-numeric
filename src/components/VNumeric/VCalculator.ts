@@ -104,11 +104,6 @@ export default Vue.extend({
       if (!this.operand) return ''
       return (this.operand === 0) ? '' : this.operand.toString()
     }
-    // computed
-    // fab: (this.calcStyle && this.calcStyle.fab) ? this.calcStyle.fab : this.fab,
-    // outlined: (this.calcStyle && this.calcStyle.outlined) ? this.calcStyle.outlined : this.outlined,
-    // rounded: (this.calcStyle && this.calcStyle.rounded) ? this.calcStyle.rounded : this.rounded,
-    // text: (this.calcStyle && this.calcStyle.text) ? this.calcStyle.text : this.text
   },
   data: () => ({
     value: '0',
@@ -208,18 +203,6 @@ export default Vue.extend({
         this.value = res.toString()
       }
     },
-    // genTextOperand (): VNode {
-    //   return this.$createElement('div', {
-    //     style: {
-    //       textAlign: 'right'
-    //     },
-    //     props: {
-    //       value: this.textOperand,
-    //       disabled: true,
-    //       dense: true
-    //     }
-    //   })
-    // },
     genNumberButton (numberValue: string): VNode {
       return this.$createElement(VBtnA, {
         style: {

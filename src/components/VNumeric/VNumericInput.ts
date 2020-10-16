@@ -209,7 +209,10 @@ export default Vue.extend({
         focus: () => this.setFocus(true),
         blur: () => this.setFocus(false),
         'click:clear': this.clearValue,
-        'click:append': this.activateCalculator,
+        'click:append': () => {
+          this.updateDimensions()
+          this.activateCalculator()
+        },
         input: (val: string) => { this.internalValue = Number(val) }
       }
     })

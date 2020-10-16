@@ -149,7 +149,9 @@ export default Vue.extend({
         props,
         slot: 'activator',
         on: {
-          'activate-calculator': () => this.activateCalculator(),
+          'activate-calculator': () => {
+            this.activateCalculator()
+          },
           'change-value': (val: string|number|undefined) => this.changeValue(val),
           'resize-numeric-input': (rect: PosMenuType) => this.setMenuPosition(rect),
           input: (val: string|number) => { this.internalValue = Number(val) }

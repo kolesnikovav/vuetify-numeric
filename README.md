@@ -90,6 +90,21 @@ export default {
 | elevation | Sets the calculator elevation | Number | 10 |
 | fab | FAB-kind calculator's button | Boolean | false |
 | text | use transparent background in calculator | Boolean | false |
+| calcStyle | You can customize calculator's button style separately from input field. This is not mandatory.| object | undefined |
+
+### calcStyle object properties:
+This object uses for customizing calculator buttons, and consist of the same Vuetify v-btn properies.
+For details, see [official documentation](https://vuetifyjs.com/en/components/buttons/#api)
+
+    calcStyle: {
+      fab: false,
+      outlined: false,
+      rounded: false,
+      text: false,
+      tile: false,
+      large: false,
+      small: false
+    }
 
 Anover props are derived from [v-text-field](https://vuetifyjs.com/en/components/text-fields) component
 
