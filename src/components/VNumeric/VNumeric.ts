@@ -63,6 +63,10 @@ export default Vue.extend({
       type: Boolean,
       default: false
     },
+    calcStyle: {
+      type: Object,
+      default: undefined
+    },
     ...VTextFieldProps
   },
   computed: {
@@ -122,7 +126,8 @@ export default Vue.extend({
           text: this.$props.text,
           dark: this.$props.dark,
           dense: this.$props.dense,
-          isActive: this.isMenuActive
+          isActive: this.isMenuActive,
+          calcStyle: this.$props.calcStyle
         },
         on: {
           'return-value': (val: string|number|undefined) => this.closeCalculator(val)
@@ -144,7 +149,9 @@ export default Vue.extend({
         props,
         slot: 'activator',
         on: {
-          'activate-calculator': () => this.activateCalculator(),
+          'activate-calculator': () => {
+            this.activateCalculator()
+          },
           'change-value': (val: string|number|undefined) => this.changeValue(val),
           'resize-numeric-input': (rect: PosMenuType) => this.setMenuPosition(rect),
           input: (val: string|number) => { this.internalValue = Number(val) }
