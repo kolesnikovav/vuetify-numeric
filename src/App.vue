@@ -58,6 +58,7 @@
             label="clearable"
           ></v-switch>
           <v-switch v-model="readonly" class="ma-2" label="readonly"></v-switch>
+          <v-switch v-model="useCalculator" class="ma-2" label="useCalculator"></v-switch>
         </v-row>
         </v-card>
         <span>Custom calculator's style</span>
@@ -154,6 +155,8 @@
           :readonly="readonly"
           :min="min"
           :max="max"
+          calc-icon = ""
+          :useCalculator = "useCalculator"
           :calcStyle="calcStyle"
           v-model="value"
         ></v-numeric>
@@ -216,6 +219,7 @@ export default Vue.extend({
     locales: ['en-US', 'ru-RU', 'zh-ZH'],
     readonly: false,
     value: 0,
+    useCalculator: true,
     calcStyle: {
       fab: false,
       outlined: false,

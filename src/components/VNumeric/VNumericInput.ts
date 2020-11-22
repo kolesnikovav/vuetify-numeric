@@ -39,6 +39,10 @@ export default Vue.extend({
       type: Boolean,
       default: true
     },
+    calcIcon: {
+      type: String,
+      default: 'mdi-calculator'
+    },
     ...VTextFieldProps
   },
   data: () => ({
@@ -198,7 +202,7 @@ export default Vue.extend({
     if (currentProps.prefix) {
       currentProps.prefix = undefined
     }
-    currentProps.appendIcon = 'mdi-calculator'
+    currentProps.appendIcon = this.$props.calcIcon
     return this.$createElement(VTextFieldA, {
       domProps: {
         value: this.internalValue
