@@ -91,6 +91,8 @@ export default {
 | fab | FAB-kind calculator's button | Boolean | false |
 | text | use transparent background in calculator | Boolean | false |
 | calcStyle | You can customize calculator's button style separately from input field. This is not mandatory.| object | undefined |
+| calcIcon | You can customize calculator's icon. If it's undefined, the calculator icon does not appear.| string | 'mdi-calculator' |
+| useCalculator | Turn on/off calculator usage.| boolean | true |
 
 ### calcStyle object properties:
 This object uses for customizing calculator buttons, and consist of the same Vuetify v-btn properies.

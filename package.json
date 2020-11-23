@@ -1,6 +1,6 @@
 {
   "name": "vuetify-numeric",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "private": false,
   "description": "Numeric input components for use with vuetifyjs",
   "author": {
