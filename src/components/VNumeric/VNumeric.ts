@@ -63,6 +63,14 @@ export default Vue.extend({
       type: Boolean,
       default: false
     },
+    calcIcon: {
+      type: String,
+      default: 'mdi-calculator'
+    },
+    useCalculator: {
+      type: Boolean,
+      default: true
+    },
     calcStyle: {
       type: Object,
       default: undefined
@@ -111,7 +119,8 @@ export default Vue.extend({
         this.$emit('input', this.internalValue)
       }
     },
-    genCalculator (): VNode {
+    genCalculator (): VNode|undefined {
+      if (!this.$props.useCalculator) return undefined
       return this.$createElement(VCalculator, {
         props: {
           initialValue: this.internalValue,
