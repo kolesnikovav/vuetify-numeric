@@ -217,7 +217,8 @@ export default Vue.extend({
           this.updateDimensions()
           this.activateCalculator()
         },
-        input: (val: string) => { this.internalValue = Number(val) }
+        input: (val: string) => { this.internalValue = Number(val) },
+        change: (val: string) => this.$emit('change', val)
       }
     })
   }

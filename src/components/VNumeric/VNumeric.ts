@@ -163,7 +163,8 @@ export default Vue.extend({
           },
           'change-value': (val: string|number|undefined) => this.changeValue(val),
           'resize-numeric-input': (rect: PosMenuType) => this.setMenuPosition(rect),
-          input: (val: string|number) => { this.internalValue = Number(val) }
+          input: (val: string|number) => { this.internalValue = Number(val) },
+          change: (val: string) => this.$emit('change', val)
         }
       })
     }

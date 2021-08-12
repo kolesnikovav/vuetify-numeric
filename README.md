@@ -113,6 +113,7 @@ Anover props are derived from [v-text-field](https://vuetifyjs.com/en/components
 ### Events:
 
 `@input`: Emitted when value is changed after user input.
+`@change`: Emitted formatted value as string when that is changed after user input.
 
 ### CDN example:
 
