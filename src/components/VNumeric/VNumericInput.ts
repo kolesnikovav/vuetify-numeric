@@ -46,7 +46,7 @@ export default Vue.extend({
     ...VTextFieldProps
   },
   data: () => ({
-    internalValue: 0,
+    internalValue: this.$props.value || 0,
     fractDigitsEdited: false,
     fractPart: '0',
     isFocused: false
@@ -110,6 +110,7 @@ export default Vue.extend({
     },
     keyProcess (keyEvent: KeyboardEvent) {
       if (!this.isFocused) return
+      if (keyEvent.key === 'Tab') return
       if (this.$props.readonly) {
         keyEvent.preventDefault()
         keyEvent.stopPropagation()
