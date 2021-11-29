@@ -100,6 +100,10 @@ export default Vue.extend({
       if (!this.calcStyle) return false
       return (this.calcStyle.small === undefined) ? false : this.calcStyle.small
     },
+    computedWidth (): string {
+      if (!this.calcStyle) return '288px'
+      return (this.calcStyle.width === undefined) ? '288px' : this.calcStyle.width
+    },
     textOperand (): string {
       if (!this.operand) return ''
       return (this.operand === 0) ? '' : this.operand.toString()
@@ -309,7 +313,7 @@ export default Vue.extend({
         tabindex: 0
       },
       props: {
-        maxWidth: '288px',
+        width: this.computedWidth,
         elevation: this.elevation,
         dark: this.dark
       }

@@ -1,6 +1,6 @@
 {
-  "name": "vuetify-numeric",
-  "version": "0.1.8",
+  "name": "kurob-vuetify-numeric",
+  "version": "0.1.9",
   "private": false,
   "description": "Numeric input components for use with vuetifyjs",
   "author": {
