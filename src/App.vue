@@ -155,8 +155,7 @@
           :readonly="readonly"
           :min="min"
           :max="max"
-          calc-icon = ""
-          :useCalculator = "useCalculator"
+          :use-calculator = "useCalculator"
           :calcStyle="calcStyle"
           v-model="value"
         ></v-numeric>

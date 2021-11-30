@@ -100,6 +100,14 @@ export default Vue.extend({
       if (!this.calcStyle) return false
       return (this.calcStyle.small === undefined) ? false : this.calcStyle.small
     },
+    computedWidth (): string {
+      if (!this.calcStyle) return '288px'
+      return (this.calcStyle.width === undefined) ? '288px' : this.calcStyle.width
+    },
+    computedHeight (): string {
+      if (!this.calcStyle) return '255px'
+      return (this.calcStyle.height === undefined) ? '255px' : this.calcStyle.height
+    },
     textOperand (): string {
       if (!this.operand) return ''
       return (this.operand === 0) ? '' : this.operand.toString()
@@ -309,7 +317,8 @@ export default Vue.extend({
         tabindex: 0
       },
       props: {
-        maxWidth: '288px',
+        width: this.computedWidth,
+        height: this.computedHeight,
         elevation: this.elevation,
         dark: this.dark
       }
