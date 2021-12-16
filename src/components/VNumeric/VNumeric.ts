@@ -167,6 +167,14 @@ export default Vue.extend({
           change: (val: string) => this.$emit('change', val)
         }
       })
+    },
+    computedWidth (): string {
+      if (!this.$props.calcStyle) return '288px'
+      return (this.$props.calcStyle.width === undefined) ? '288px' : this.$props.calcStyle.width
+    },
+    computedHeight (): string {
+      if (!this.$props.calcStyle) return '288px'
+      return (this.$props.calcStyle.height === undefined) ? '288px' : this.$props.calcStyle.height
     }
   },
   render (): VNode {
@@ -181,7 +189,8 @@ export default Vue.extend({
         value: this.isMenuActive,
         dark: this.$props.dark,
         dense: this.$props.dense,
-        maxWidth: '288px',
+        width: this.computedWidth,
+        height: this.computedHeight,
         right: true
       },
       scopedSlots: {

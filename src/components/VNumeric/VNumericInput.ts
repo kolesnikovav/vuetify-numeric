@@ -43,17 +43,19 @@ export default Vue.extend({
       type: String,
       default: 'mdi-calculator'
     },
+    value: {
+      type: [String, Number],
+      default: 0
+    },
     ...VTextFieldProps
   },
-  data () {
-    return {
-      internalValue: this.$props.value || 0,
-      fractDigitsEdited: false,
-      clrValue: false,
-      fractPart: '0',
-      isFocused: false
-    }
-  },
+  data: () => ({
+    internalValue: 0,
+    fractDigitsEdited: false,
+    fractPart: '0',
+    isFocused: false,
+    clrValue: false
+  }),
   computed: {
     numberFormatter (): Intl.NumberFormat {
       return new Intl.NumberFormat(this.$props.locale, {
@@ -80,8 +82,18 @@ export default Vue.extend({
     }
   },
   watch: {
-    value (val) {
-      this.$data.internalValue = val
+    value: {
+      immediate: true,
+      handler (newVal?: string | number) {
+        if (!newVal) {
+          this.internalValue = 0
+        } else if (typeof newVal === 'string') {
+          this.internalValue = Number.parseFloat(newVal)
+        } else {
+          this.internalValue = newVal
+        }
+      },
+      deep: true
     },
     internalValue (val) {
       this.$emit('change-value', val)
