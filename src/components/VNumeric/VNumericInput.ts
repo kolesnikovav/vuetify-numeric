@@ -45,12 +45,15 @@ export default Vue.extend({
     },
     ...VTextFieldProps
   },
-  data: () => ({
-    internalValue: this.$props.value || 0,
-    fractDigitsEdited: false,
-    fractPart: '0',
-    isFocused: false
-  }),
+  data () {
+    return {
+      internalValue: this.$props.value || 0,
+      fractDigitsEdited: false,
+      clrValue: false,
+      fractPart: '0',
+      isFocused: false
+    }
+  },
   computed: {
     numberFormatter (): Intl.NumberFormat {
       return new Intl.NumberFormat(this.$props.locale, {
@@ -60,9 +63,15 @@ export default Vue.extend({
     },
     computedValue (): string {
       if (this.internalValue) {
-        return (this.$props.prefix ? this.$props.prefix : '') + this.numberFormatter.format(this.internalValue)
+        return (
+          (this.$props.prefix ? this.$props.prefix : '') +
+          this.numberFormatter.format(this.internalValue)
+        )
       }
-      return (this.$props.prefix ? this.$props.prefix : '') + this.numberFormatter.format(0)
+      return (
+        (this.$props.prefix ? this.$props.prefix : '') +
+        this.numberFormatter.format(0)
+      )
     },
     computedColor (): string | undefined {
       if (this.internalValue < 0 && this.$props.negativeTextColor) {
@@ -132,12 +141,17 @@ export default Vue.extend({
       let strVal = Math.trunc(this.internalValue).toString()
       if (numericButtons.includes(keyEvent.key)) {
         if (this.fractDigitsEdited) {
-          if (this.fractPart === '0' && keyEvent.key !== '0') {
-            this.fractPart = keyEvent.key
-          } else if (this.fractPart !== '0') {
-            this.fractPart += keyEvent.key.toString()
-          }
+          this.fractPart += keyEvent.key.toString()
+          this.fractPart = this.fractPart.substr(
+            Math.max(0, this.fractPart.length - this.$props.precision),
+            this.$props.precision
+          )
         } else {
+          if (this.clrValue) {
+            this.fractPart = '00'
+            strVal = '0'
+            this.clrValue = false
+          }
           if (strVal === '0' && keyEvent.key !== '0') {
             strVal = keyEvent.key
           } else if (strVal !== '0') {
@@ -149,12 +163,16 @@ export default Vue.extend({
         else strVal = '-' + strVal
       } else if (keyEvent.key === 'Backspace') {
         if (this.fractDigitsEdited) {
-          this.fractPart = this.fractPart.length <= 1 ? '0' : this.fractPart.substring(0, this.fractPart.length - 1)
+          this.fractPart =
+            this.fractPart.length <= 1
+              ? '0'
+              : this.fractPart.substring(0, this.fractPart.length - 1)
         } else {
           if (strVal.length === 2 && strVal.startsWith('-')) {
             strVal = '0'
           } else {
-            strVal = strVal.length <= 1 ? '0' : strVal.substring(0, strVal.length - 1)
+            strVal =
+              strVal.length <= 1 ? '0' : strVal.substring(0, strVal.length - 1)
           }
         }
       } else if ([',', '.'].includes(keyEvent.key)) {
@@ -170,7 +188,10 @@ export default Vue.extend({
         const p = Math.pow(10, this.$props.precision)
         result = Math.round(Number(result) * p) / p
       }
-      result = result = Math.max(Math.min(this.$props.max, result), this.$props.min)
+      result = result = Math.max(
+        Math.min(this.$props.max, result),
+        this.$props.min
+      )
       this.internalValue = result
     },
     updateDimensions () {
@@ -211,14 +232,20 @@ export default Vue.extend({
       props: currentProps,
       on: {
         keydown: this.keyProcess,
-        focus: () => this.setFocus(true),
+        focus: () => {
+          this.setFocus(true)
+          this.fractDigitsEdited = false
+          this.clrValue = true
+        },
         blur: () => this.setFocus(false),
         'click:clear': this.clearValue,
         'click:append': () => {
           this.updateDimensions()
           this.activateCalculator()
         },
-        input: (val: string) => { this.internalValue = Number(val) },
+        input: (val: string) => {
+          this.internalValue = Number(val)
+        },
         change: (val: string) => this.$emit('change', val)
       }
     })
