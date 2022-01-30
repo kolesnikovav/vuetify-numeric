@@ -173,8 +173,8 @@ export default Vue.extend({
       return (this.$props.calcStyle.width === undefined) ? '288px' : this.$props.calcStyle.width
     },
     computedHeight (): string {
-      if (!this.$props.calcStyle) return '288px'
-      return (this.$props.calcStyle.height === undefined) ? '288px' : this.$props.calcStyle.height
+      if (!this.$props.calcStyle) return '246px'
+      return (this.$props.calcStyle.height === undefined) ? '246px' : this.$props.calcStyle.height
     }
   },
   render (): VNode {
@@ -190,6 +190,7 @@ export default Vue.extend({
         dark: this.$props.dark,
         dense: this.$props.dense,
         width: this.computedWidth,
+        maxWidth: this.computedWidth(),
         height: this.computedHeight,
         right: true
       },

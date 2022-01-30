@@ -105,8 +105,10 @@ export default Vue.extend({
       return (this.calcStyle.width === undefined) ? '288px' : this.calcStyle.width
     },
     computedHeight (): string {
-      if (!this.calcStyle) return '255px'
-      return (this.calcStyle.height === undefined) ? '255px' : this.calcStyle.height
+      if (!this.calcStyle) return '246px'
+      return (this.calcStyle.height === undefined)
+        ? this.calcStyle.small ? '212px' : '246px'
+        : this.calcStyle.height
     },
     textOperand (): string {
       if (!this.operand) return ''
