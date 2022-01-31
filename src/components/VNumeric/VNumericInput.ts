@@ -113,7 +113,7 @@ export default Vue.extend({
       }
     },
     clearValue () {
-      this.internalValue = 1
+      this.internalValue = 0
       this.fractPart = '0'
       this.fractDigitsEdited = false
       this.$nextTick(() => {
@@ -122,6 +122,7 @@ export default Vue.extend({
         } else {
           this.internalValue = 0
         }
+        this.$emit('change-value', this.internalValue)
       })
     },
     activateCalculator () {

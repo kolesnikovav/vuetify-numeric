@@ -200,6 +200,8 @@ export default Vue.extend({
         this.reset()
         this.$emit('return-value', undefined)
       } else if (v === 'Delete') {
+        this.value = '0'
+        this.$emit('return-value', this.value)
         this.reset()
       }
     },

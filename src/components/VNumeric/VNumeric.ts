@@ -117,6 +117,9 @@ export default Vue.extend({
         result = Math.max(Math.min(this.$props.max, result), this.$props.min)
         this.internalValue = result
         this.$emit('input', this.internalValue)
+      } else if (val === 0) {
+        this.internalValue = 0
+        this.$emit('input', this.internalValue)
       }
     },
     genCalculator (): VNode|undefined {
