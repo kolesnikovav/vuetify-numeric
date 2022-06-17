@@ -107,7 +107,7 @@ export default Vue.extend({
     },
     changeValue (val: string|number|undefined) {
       let result: number
-      if (val) {
+      if (Number(val) > -1) {
         if (this.computedPrecision > 0) {
           const p = Math.pow(10, this.computedPrecision)
           result = Math.round(Number(val) * p) / p
