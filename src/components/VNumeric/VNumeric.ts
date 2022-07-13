@@ -14,6 +14,10 @@ const VTextFieldProps = ((VTextFieldA as any).options as any).props
 export default Vue.extend({
   name: 'v-numeric',
   props: {
+    calcNoTabindex: {
+      type: Boolean,
+      default: false
+    },
     min: {
       type: Number,
       default: -Number.MAX_VALUE
@@ -33,6 +37,10 @@ export default Vue.extend({
     negativeTextColor: {
       type: String,
       default: 'red'
+    },
+    openKey: {
+      type: String,
+      default: 'Enter'
     },
     textColor: {
       type: Function,
