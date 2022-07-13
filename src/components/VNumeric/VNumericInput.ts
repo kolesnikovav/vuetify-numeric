@@ -1,5 +1,5 @@
 import Vue, { VNode } from 'vue'
-import { VTextFieldA } from '../../shims-vuetify'
+import { VIconA, VTextFieldA } from '../../shims-vuetify'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VTextFieldProps = ((VTextFieldA as any).options as any).props
@@ -7,6 +7,10 @@ const VTextFieldProps = ((VTextFieldA as any).options as any).props
 export default Vue.extend({
   name: 'v-numeric-input',
   props: {
+    calcNoTabindex: {
+      type: Boolean,
+      default: false
+    },
     min: {
       type: Number,
       default: -Number.MAX_VALUE
@@ -231,14 +235,13 @@ export default Vue.extend({
     window.removeEventListener('resize', this.updateDimensions)
     window.removeEventListener('load', this.updateDimensions)
   },
-  render (): VNode {
+  render (createElement): VNode {
     const currentProps = Object.assign({}, this.$props)
     currentProps.value = this.computedValue
     if (currentProps.prefix) {
       currentProps.prefix = undefined
     }
-    currentProps.appendIcon = this.$props.calcIcon
-    return this.$createElement(VTextFieldA, {
+    return createElement(VTextFieldA, {
       domProps: {
         value: this.internalValue
       },
@@ -252,15 +255,27 @@ export default Vue.extend({
         },
         blur: () => this.setFocus(false),
         'click:clear': this.clearValue,
-        'click:append': () => {
-          this.updateDimensions()
-          this.activateCalculator()
-        },
         input: (val: string) => {
           this.internalValue = Number(val)
         },
         change: (val: string) => this.$emit('change', val)
       }
-    })
+    }, [...(this.$props.useCalculator
+      ? [
+        createElement(VIconA, {
+          slot: 'append',
+          attrs: {
+            tabindex: this.$props.calcNoTabindex ? -1 : 0
+          },
+          on: {
+            click: () => {
+              this.updateDimensions()
+              this.activateCalculator()
+            }
+          }
+        }, this.$props.calcIcon)
+      ]
+      : []
+    )])
   }
 })

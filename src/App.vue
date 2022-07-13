@@ -44,6 +44,9 @@
               label="precision"
             ></v-text-field>
           </v-col>
+          <v-col cols="2">
+            <v-switch label="calcNoTabindex" v-model="calcNoTabindex"></v-switch>
+          </v-col>
         </v-row>
         <span>Input style</span>
         <v-card class="d-flex pa-2" outlined tile>
@@ -145,6 +148,7 @@
           :placeholder="placeholder"
           :locale="locale"
           :prefix="prefix"
+          :calcNoTabindex="calcNoTabindex"
           :useGrouping="useGrouping"
           :precision="precision"
           :fab="fab"
@@ -168,6 +172,7 @@
           :placeholder="placeholder"
           :locale="locale"
           :prefix="prefix"
+          :calcNoTabindex="calcNoTabindex"
           :useGrouping="useGrouping"
           :precision="precision"
           :fab="fab"
@@ -201,6 +206,7 @@ export default Vue.extend({
   data: () => ({
     label: 'My label',
     hint: 'My hint',
+    calcNoTabindex: false,
     clearable: false,
     placeholder: 'type your number here',
     dark: false,
