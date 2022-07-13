@@ -19,9 +19,13 @@ export default Vue.extend({
       type: Number,
       default: Number.MAX_VALUE
     },
-    lenght: {
+    length: {
       type: Number,
       default: 10
+    },
+    openKey: {
+      type: String,
+      default: 'Enter'
     },
     precision: {
       type: Number,
@@ -146,7 +150,7 @@ export default Vue.extend({
         keyEvent.preventDefault()
       }
       keyEvent.stopPropagation()
-      if (keyEvent.key === 'Enter') {
+      if (keyEvent.key === this.$props.openKey) {
         this.updateDimensions()
         this.activateCalculator()
         return

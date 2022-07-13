@@ -45,6 +45,13 @@
             ></v-text-field>
           </v-col>
           <v-col cols="2">
+            <v-text-field
+              xs3
+              v-model="openKey"
+              label="openKey"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="2">
             <v-switch label="calcNoTabindex" v-model="calcNoTabindex"></v-switch>
           </v-col>
         </v-row>
@@ -148,6 +155,7 @@
           :placeholder="placeholder"
           :locale="locale"
           :prefix="prefix"
+          :openKey="openKey"
           :calcNoTabindex="calcNoTabindex"
           :useGrouping="useGrouping"
           :precision="precision"
@@ -172,6 +180,7 @@
           :placeholder="placeholder"
           :locale="locale"
           :prefix="prefix"
+          :openKey="openKey"
           :calcNoTabindex="calcNoTabindex"
           :useGrouping="useGrouping"
           :precision="precision"
@@ -211,6 +220,7 @@ export default Vue.extend({
     placeholder: 'type your number here',
     dark: false,
     fab: false,
+    openKey: 'Enter',
     outlined: true,
     rounded: false,
     text: false,

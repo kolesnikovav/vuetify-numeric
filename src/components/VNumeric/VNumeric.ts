@@ -38,6 +38,10 @@ export default Vue.extend({
       type: String,
       default: 'red'
     },
+    openKey: {
+      type: String,
+      default: 'Enter'
+    },
     textColor: {
       type: Function,
       default: undefined
