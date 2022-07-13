@@ -27,7 +27,7 @@ Numeric input components for use with [vuetifyjs](https://vuetifyjs.com).
  ## Keyboard shortcuts
 | Key | Action |
 | ---- | -------- |
-| Enter | Activate calculator or calculate your expression and close the calculator |
+| Enter | Activate calculator or calculate your expression and close the calculator. (Note) You can change calculator's activation key |
 | Delete | Reset calculator |
 | . or , | Swich your input between integer and fraction part of number |
 | - | Change your input number sign |
@@ -93,6 +93,8 @@ export default {
 | calcStyle | You can customize calculator's button style separately from input field. This is not mandatory.| object | undefined |
 | calcIcon | You can customize calculator's icon. If it's undefined, the calculator icon does not appear.| string | 'mdi-calculator' |
 | useCalculator | Turn on/off calculator usage.| boolean | true |
+| openKey  | Key for open build-in calculator | String |'Enter'
+| calcNoTabindex | Set or not tabindex attribute in calc icon | Boolean | false |
 
 ### calcStyle object properties:
 This object uses for customizing calculator buttons, and consist of the same Vuetify v-btn properies.
@@ -145,7 +147,7 @@ You can use this library without installation, via cdn provider
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vuetify-numeric@0.1.x/vuetify-numeric.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify-numeric@0.2.x/vuetify-numeric.umd.min.js"></script>
   <script>
     new Vue({
       el: '#app',
